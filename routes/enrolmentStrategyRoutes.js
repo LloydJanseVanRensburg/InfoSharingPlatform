@@ -1,16 +1,23 @@
 const express = require('express');
 const enrolmentStrategyControllers = require('../controllers/enrolmentStrategyControllers');
+const uploader = require('../middleware/fileUpload');
 const router = express.Router();
 
 router
   .route('/')
   .get(enrolmentStrategyControllers.getAllEnrolmentStrategies)
-  .post(enrolmentStrategyControllers.createEnrolmentStrategy);
+  .post(
+    uploader.single('pdf'),
+    enrolmentStrategyControllers.createEnrolmentStrategy
+  );
 
 router
   .route('/:id')
   .get(enrolmentStrategyControllers.getEnrolmentStrategyById)
-  .put(enrolmentStrategyControllers.updateEnrolmentStrategyById)
+  .put(
+    uploader.single('pdf'),
+    enrolmentStrategyControllers.updateEnrolmentStrategyById
+  )
   .delete(enrolmentStrategyControllers.deleteEnrolmentStrategyById);
 
 module.exports = router;

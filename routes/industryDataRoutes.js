@@ -1,16 +1,17 @@
 const express = require('express');
 const industyDataControllers = require('../controllers/industyDataControllers');
+const uploader = require('../middleware/fileUpload');
 const router = express.Router();
 
 router
   .route('/')
   .get(industyDataControllers.getAllIndustryData)
-  .post(industyDataControllers.createIndustryData);
+  .post(uploader.single('pdf'), industyDataControllers.createIndustryData);
 
 router
   .route('/:id')
   .get(industyDataControllers.getIndustryDataById)
-  .put(industyDataControllers.updateIndustryDataById)
+  .put(uploader.single('pdf'), industyDataControllers.updateIndustryDataById)
   .delete(industyDataControllers.deleteIndustryDataById);
 
 module.exports = router;

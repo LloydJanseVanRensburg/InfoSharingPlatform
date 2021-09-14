@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+const path = require('path');
+
 // 3rd Party
 const express = require('express');
 const cors = require('cors');
@@ -26,6 +28,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
+
+// Serving Static Uploaded files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routing
 app.use('/api/v1/users', require('./routes/userRoutes'));
