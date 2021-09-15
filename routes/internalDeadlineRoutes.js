@@ -8,6 +8,10 @@ router
   .post(internalDeadlineControllers.createInternalDeadline);
 
 router
+  .route('/faculty/:id')
+  .get(internalDeadlineControllers.getAllFacultyInternalDeadlines);
+
+router
   .route('/:id')
   .get(internalDeadlineControllers.getInternalDeadlineById)
   .put(internalDeadlineControllers.updateInternalDeadlineById)

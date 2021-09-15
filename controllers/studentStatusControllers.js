@@ -148,3 +148,19 @@ exports.deleteStudentStatusById = async (req, res, next) => {
     console.error(error);
   }
 };
+
+exports.getAllFacultyStudentStatuses = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const studentStatuses = await StudentStatus.findAll({
+      where: {
+        facultyId: id,
+      },
+    });
+
+    res.status(200).json({ success: true, studentStatuses });
+  } catch (error) {
+    next(new AppError('Server Error - Check Logs', 500));
+    console.error(error);
+  }
+};

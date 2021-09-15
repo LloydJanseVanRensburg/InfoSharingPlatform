@@ -112,3 +112,19 @@ exports.deleteEnrolmentStrategyById = async (req, res, next) => {
     console.error(error);
   }
 };
+
+exports.getAllFacultyEnrolmentStrategies = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const enrolmentStrategies = await EnrolmentStrategy.findAll({
+      where: {
+        facultyId: id,
+      },
+    });
+
+    res.status(200).json({ success: true, enrolmentStrategies });
+  } catch (error) {
+    next(new AppError('Server Error - Check Logs', 500));
+    console.error(error);
+  }
+};

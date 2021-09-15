@@ -7,6 +7,8 @@ router
   .get(enrolmentControllers.getAllEnrolments)
   .post(enrolmentControllers.createEnrolment);
 
+router.route('/faculty/:id').get(enrolmentControllers.getAllFacultyEnrolments);
+
 router
   .route('/:id')
   .get(enrolmentControllers.getEnrolmentById)

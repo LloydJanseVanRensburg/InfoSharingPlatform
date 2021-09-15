@@ -172,3 +172,19 @@ exports.deleteEnrolmentById = async (req, res, next) => {
     console.error(error);
   }
 };
+
+exports.getAllFacultyEnrolments = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const enrolments = await Enrolment.findAll({
+      where: {
+        facultyId: id,
+      },
+    });
+
+    res.status(200).json({ success: true, enrolments });
+  } catch (error) {
+    next(new AppError('Server Error - Check Logs', 500));
+    console.error(error);
+  }
+};

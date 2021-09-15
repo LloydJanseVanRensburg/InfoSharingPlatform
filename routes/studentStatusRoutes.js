@@ -8,6 +8,10 @@ router
   .post(studentStatusControllers.createStudentStatus);
 
 router
+  .route('/faculty/:id')
+  .get(studentStatusControllers.getAllFacultyStudentStatuses);
+
+router
   .route('/:id')
   .get(studentStatusControllers.getStudentStatusById)
   .put(studentStatusControllers.updateStudentStatusById)

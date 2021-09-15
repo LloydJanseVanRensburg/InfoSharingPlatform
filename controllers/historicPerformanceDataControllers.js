@@ -112,3 +112,19 @@ exports.deleteHistoricPerformanceDataById = async (req, res, next) => {
     console.error(error);
   }
 };
+
+exports.getAllFacultyHistoricPerformance = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const historicPerformanceData = await HistoricPerformanceData.findAll({
+      where: {
+        facultyId: id,
+      },
+    });
+
+    res.status(200).json({ success: true, historicPerformanceData });
+  } catch (error) {
+    next(new AppError('Server Error - Check Logs', 500));
+    console.error(error);
+  }
+};

@@ -1,6 +1,7 @@
 const express = require('express');
 const historicPerformanceDataControllers = require('../controllers/historicPerformanceDataControllers');
 const uploader = require('../middleware/fileUpload');
+const HistoricPerformanceData = require('../models/HistoricPerformanceDataModel');
 const router = express.Router();
 
 router
@@ -10,6 +11,10 @@ router
     uploader.single('pdf'),
     historicPerformanceDataControllers.createHistoricPerformanceData
   );
+
+router
+  .route('/faculty/:id')
+  .get(historicPerformanceDataControllers.getAllFacultyHistoricPerformance);
 
 router
   .route('/:id')

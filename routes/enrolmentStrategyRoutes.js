@@ -12,6 +12,10 @@ router
   );
 
 router
+  .route('/faculty/:id')
+  .get(enrolmentStrategyControllers.getAllFacultyEnrolmentStrategies);
+
+router
   .route('/:id')
   .get(enrolmentStrategyControllers.getEnrolmentStrategyById)
   .put(

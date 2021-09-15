@@ -120,3 +120,19 @@ exports.deleteInternalDeadlineById = async (req, res, next) => {
     console.error(error);
   }
 };
+
+exports.getAllFacultyInternalDeadlines = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const internalDeadlines = await InternalDeadline.findAll({
+      where: {
+        facultyId: id,
+      },
+    });
+
+    res.status(200).json({ success: true, internalDeadlines });
+  } catch (error) {
+    next(new AppError('Server Error - Check Logs', 500));
+    console.error(error);
+  }
+};

@@ -1,25 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { Worker } from '@react-pdf-viewer/core';
+import Navbar from './components/Navbar/Navbar';
+import FacultiesPage from './pages/FacultiesPage/FacultiesPage';
+import LoginPage from './pages/LoginPage/LoginPage';
+import RegisterPage from './pages/RegisterPage/RegisterPage';
+import FacultyById from './pages/FacultyById/FacultyById';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.6.347/build/pdf.worker.min.js">
+      <Router>
+        <div className="App">
+          <Navbar />
+
+          <Switch>
+            <Route exact path="/" component={FacultiesPage} />
+            <Route exact path="/login" component={LoginPage} />
+            <Route exact path="/register" component={RegisterPage} />
+            <Route exact path="/faculties/:id" component={FacultyById} />
+          </Switch>
+        </div>
+      </Router>
+    </Worker>
   );
-}
+};
 
 export default App;

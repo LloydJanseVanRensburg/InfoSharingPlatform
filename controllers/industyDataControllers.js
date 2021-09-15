@@ -108,3 +108,19 @@ exports.deleteIndustryDataById = async (req, res, next) => {
     console.error(error);
   }
 };
+
+exports.getAllFacultyIndustryData = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const industryData = await IndustryData.findAll({
+      where: {
+        facultyId: id,
+      },
+    });
+
+    res.status(200).json({ success: true, industryData });
+  } catch (error) {
+    next(new AppError('Server Error - Check Logs', 500));
+    console.error(error);
+  }
+};

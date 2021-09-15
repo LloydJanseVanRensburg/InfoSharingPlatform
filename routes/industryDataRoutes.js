@@ -9,6 +9,10 @@ router
   .post(uploader.single('pdf'), industyDataControllers.createIndustryData);
 
 router
+  .route('/faculty/:id')
+  .get(industyDataControllers.getAllFacultyIndustryData);
+
+router
   .route('/:id')
   .get(industyDataControllers.getIndustryDataById)
   .put(uploader.single('pdf'), industyDataControllers.updateIndustryDataById)
