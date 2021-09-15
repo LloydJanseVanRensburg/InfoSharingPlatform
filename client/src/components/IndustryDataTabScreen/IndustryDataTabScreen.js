@@ -49,10 +49,9 @@ const IndustryDataTabScreen = ({ value }) => {
         <div>
           <div className={classes.uploadBtnContainer}>
             <input
-              accept="image/*"
+              accept="pdf/*"
               className={classes.input}
               id="contained-button-file"
-              multiple
               type="file"
             />
             <label htmlFor="contained-button-file">
