@@ -26,7 +26,7 @@ const SimpleBarChart = ({ data }) => {
       <YAxis />
       <Tooltip />
       <Legend />
-      <Bar dataKey="value" fill="#8884d8" />
+      <Bar dataKey="value" fill="#6C3E90" />
     </BarChart>
   );
 };

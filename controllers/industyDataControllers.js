@@ -116,6 +116,7 @@ exports.getAllFacultyIndustryData = async (req, res, next) => {
       where: {
         facultyId: id,
       },
+      order: [['createdAt', 'DESC']],
     });
 
     res.status(200).json({ success: true, industryData });

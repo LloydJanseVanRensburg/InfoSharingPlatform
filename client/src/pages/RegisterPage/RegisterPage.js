@@ -1,4 +1,5 @@
-import { useState, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { useHistory } from 'react-router';
 import authContext from '../../context/AuthContext/authContext';
 import {
   Container,
@@ -6,13 +7,8 @@ import {
   makeStyles,
   Typography,
   Button,
-  Snackbar,
 } from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert/Alert';
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import AlertComponent from '../../components/AlertComponent/AlertComponent';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -44,7 +40,23 @@ const RegisterPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [open, setOpen] = useState(false);
+  const [snack, setSnack] = useState({
+    vertical: 'top',
+    horizontal: 'center',
+    open: false,
+    severity: 'success',
+    message: 'Success',
+  });
+
+  const history = useHistory();
+
+  useEffect(() => {
+    if (localStorage.getItem('authToken')) {
+      history.push('/');
+    }
+  }, [history]);
+
+  const { open, severity, message } = snack;
 
   const { registerUser } = useContext(authContext);
 
@@ -52,7 +64,12 @@ const RegisterPage = () => {
     e.preventDefault();
 
     if (!username || !email || !password) {
-      return setOpen(true);
+      return setSnack({
+        ...snack,
+        message: 'Please provide all fields',
+        severity: 'error',
+        open: true,
+      });
     }
 
     registerUser({
@@ -68,7 +85,7 @@ const RegisterPage = () => {
       return;
     }
 
-    setOpen(false);
+    setSnack({ ...snack, open: false });
   };
 
   return (
@@ -111,16 +128,19 @@ const RegisterPage = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button type="submit" variant="contained" color="primary">
+        <Button size="large" type="submit" variant="contained" color="primary">
           Register
         </Button>
       </form>
 
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="error">
-          Please Enter Username, Email, and Password
-        </Alert>
-      </Snackbar>
+      <AlertComponent
+        vertical="top"
+        horizontal="center"
+        open={open}
+        severity={severity}
+        message={message}
+        handleClose={handleClose}
+      />
     </Container>
   );
 };

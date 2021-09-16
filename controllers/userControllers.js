@@ -53,7 +53,7 @@ exports.loginUser = async (req, res, next) => {
     return next(new AppError('Please provide email and password', 401));
   }
   try {
-    const user = await User.findOne({ email });
+    let user = await User.findOne({ email });
 
     if (!user) {
       return next(new AppError('Invalid Credentials', 401));
@@ -73,7 +73,9 @@ exports.loginUser = async (req, res, next) => {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
 
-    res.status(200).json({ token });
+    user = await User.findOne({ email, attributes: { exclude: ['password'] } });
+
+    res.status(200).json({ token, user });
   } catch (error) {
     next(new AppError('Login Error - view logs', 500));
     console.error(error);

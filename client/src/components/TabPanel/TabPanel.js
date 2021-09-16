@@ -1,5 +1,4 @@
-import { Box, Typography } from '@material-ui/core';
-import PropTypes from 'prop-types';
+import { Box } from '@material-ui/core';
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props;
@@ -12,19 +11,9 @@ const TabPanel = (props) => {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box p={3}>{children}</Box>}
     </div>
   );
-};
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
 };
 
 export default TabPanel;

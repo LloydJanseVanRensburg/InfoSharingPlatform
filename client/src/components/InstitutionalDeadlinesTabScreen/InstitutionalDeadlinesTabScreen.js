@@ -2,6 +2,8 @@ import { CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { useContext } from 'react';
 import facultyContext from '../../context/FacultyContext/facultyContext';
+import FullCalendar from '@fullcalendar/react'; // must go before plugins
+import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
 
 import TabPanel from '../TabPanel/TabPanel';
 
@@ -23,7 +25,9 @@ const InstitutionalDeadlinesTabScreen = ({ value }) => {
         </div>
       )}
 
-      {!loading && <h3>This should show data</h3>}
+      {!loading && (
+        <FullCalendar plugins={[dayGridPlugin]} initialView="dayGridMonth" />
+      )}
     </TabPanel>
   );
 };

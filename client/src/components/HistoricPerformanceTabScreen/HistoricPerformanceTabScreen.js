@@ -1,19 +1,17 @@
-import { Button, CircularProgress } from '@material-ui/core';
+import { Button, CircularProgress, Snackbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import facultyContext from '../../context/FacultyContext/facultyContext';
 import { Viewer } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
-
+import axios from 'axios';
 import TabPanel from '../TabPanel/TabPanel';
+import Alert from '@material-ui/lab/Alert/Alert';
 
 const useStyles = makeStyles({
   spinner: {
     textAlign: 'center',
     padding: '2rem 0',
-  },
-  input: {
-    display: 'none',
   },
   pdfContainer: {
     border: '1px solid rgba(0, 0, 0, 0.3)',
@@ -29,6 +27,11 @@ const useStyles = makeStyles({
   },
   uploadBtnContainer: {
     marginBottom: '1rem',
+    padding: '8px',
+    border: '1px solid #ccc',
+    borderRadius: '5px',
+    backgroundColor: '#ddd',
+    width: 'fit-content',
   },
 });
 
@@ -36,7 +39,57 @@ const BASE_URL = 'http://localhost:3001';
 
 const HistoricPerformanceTabScreen = ({ value }) => {
   const classes = useStyles();
-  const { loading, historicPerformanceData } = useContext(facultyContext);
+  const [pdfFile, setPdfFile] = useState('');
+  const [snack, setSnack] = useState({
+    severity: 'success',
+    message: 'Success',
+    open: false,
+  });
+
+  const {
+    loading,
+    historicPerformanceData,
+    selectedFaculty,
+    loadHistoricPerformanceData,
+  } = useContext(facultyContext);
+
+  const handleFileChange = (e) => {
+    let file = e.target.files[0];
+    setPdfFile(file);
+  };
+
+  const uploadFile = async () => {
+    const formData = new FormData();
+    formData.append('pdf', pdfFile, pdfFile.name);
+    formData.append('facultyId', selectedFaculty.id);
+
+    try {
+      await axios.post(`${BASE_URL}/api/v1/historicperformancedata`, formData);
+      setSnack({
+        severity: 'success',
+        message: 'Successfully uploaded file',
+        open: true,
+      });
+
+      loadHistoricPerformanceData(selectedFaculty.id);
+    } catch (error) {
+      setSnack({
+        severity: 'error',
+        message: 'Somethiung went wrong',
+        open: true,
+      });
+      console.error('Something went wrong with file upload', error.repsonse);
+    }
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSnack(false);
+  };
+
   return (
     <TabPanel value={value} index={5}>
       {loading && (
@@ -49,17 +102,19 @@ const HistoricPerformanceTabScreen = ({ value }) => {
         <div>
           <div className={classes.uploadBtnContainer}>
             <input
-              accept="image/*"
               className={classes.input}
               id="contained-button-file"
-              multiple
               type="file"
+              onChange={handleFileChange}
             />
-            <label htmlFor="contained-button-file">
-              <Button variant="contained" color="primary" component="span">
-                Upload
-              </Button>
-            </label>
+            <Button
+              onClick={uploadFile}
+              variant="contained"
+              color="primary"
+              component="span"
+            >
+              Upload
+            </Button>
           </div>
 
           <div className={classes.pdfsList}>
@@ -71,6 +126,12 @@ const HistoricPerformanceTabScreen = ({ value }) => {
           </div>
         </div>
       )}
+
+      <Snackbar open={snack.open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity={snack.severity}>
+          {snack.message}
+        </Alert>
+      </Snackbar>
     </TabPanel>
   );
 };

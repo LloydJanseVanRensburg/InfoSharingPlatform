@@ -1,6 +1,13 @@
-import { CircularProgress } from '@material-ui/core';
+import EditIcon from '@material-ui/icons/Edit';
+import {
+  Button,
+  CircularProgress,
+  Fab,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import facultyContext from '../../context/FacultyContext/facultyContext';
 import SimpleBarChart from '../SimpleBarChart/SimpleBarChart';
 
@@ -13,14 +20,29 @@ const useStyles = makeStyles({
   },
   tabContent: {
     display: 'flex',
-    gap: '10rem',
     margin: '5rem 0',
+    '& *': {
+      flex: 1,
+    },
+  },
+  fabEditBtn: {
+    position: 'absolute',
+    bottom: '30px',
+    right: '30px',
+  },
+  infoContainer: {
+    display: 'flex',
+    gap: '3rem',
+    '& *': {
+      flex: 1,
+    },
   },
 });
 
 const StudentStatusesTabScreen = ({ value }) => {
   const classes = useStyles();
   const { loading, studentStatuses } = useContext(facultyContext);
+  const [editView, setEditView] = useState(false);
 
   const generateStudentStatusesChartData = () => {
     let data = [
@@ -45,6 +67,12 @@ const StudentStatusesTabScreen = ({ value }) => {
     return data;
   };
 
+  const saveStudentStatusesHandler = () => {
+    setTimeout(() => {
+      setEditView(false);
+    }, 1500);
+  };
+
   return (
     <TabPanel value={value} index={1}>
       {loading && (
@@ -53,16 +81,95 @@ const StudentStatusesTabScreen = ({ value }) => {
         </div>
       )}
 
+      <Fab
+        onClick={() => setEditView((prev) => !prev)}
+        disabled={editView || loading}
+        className={classes.fabEditBtn}
+        color="secondary"
+        aria-label="edit"
+      >
+        <EditIcon />
+      </Fab>
+
       {!loading && studentStatuses[0] && (
         <div className={classes.tabContent}>
           <div>
-            <p>Accepted Students - {studentStatuses[0].acceptedStudents}</p>
-            <p>Bursary Students - {studentStatuses[0].bursaryStudents}</p>
-            <p>High APS Students - {studentStatuses[0].highAPSStudents}</p>
-            <p>
-              Hostel Acceptance Students -{' '}
-              {studentStatuses[0].hostelAcceptanceStudents}
-            </p>
+            <div className={classes.infoContainer}>
+              <Typography variant="subtitle1">Accepted Students</Typography>
+              {!editView ? (
+                <Typography variant="subtitle1">
+                  {studentStatuses[0].acceptedStudents}
+                </Typography>
+              ) : (
+                <div>
+                  <TextField
+                    value={studentStatuses[0].acceptedStudents}
+                    required
+                    id="standard-required"
+                  />
+                </div>
+              )}
+            </div>
+            <div className={classes.infoContainer}>
+              <Typography variant="subtitle1">Bursary Students</Typography>
+              {!editView ? (
+                <Typography variant="subtitle1">
+                  {studentStatuses[0].bursaryStudents}
+                </Typography>
+              ) : (
+                <div>
+                  <TextField
+                    value={studentStatuses[0].bursaryStudents}
+                    required
+                    id="standard-required"
+                  />
+                </div>
+              )}
+            </div>
+            <div className={classes.infoContainer}>
+              <Typography variant="subtitle1">High APS Students</Typography>
+              {!editView ? (
+                <Typography variant="subtitle1">
+                  {studentStatuses[0].highAPSStudents}
+                </Typography>
+              ) : (
+                <div>
+                  <TextField
+                    value={studentStatuses[0].highAPSStudents}
+                    required
+                    id="standard-required"
+                  />
+                </div>
+              )}
+            </div>
+            <div className={classes.infoContainer}>
+              <Typography variant="subtitle1">
+                Hostel Acceptance Students
+              </Typography>
+              {!editView ? (
+                <Typography variant="subtitle1">
+                  {studentStatuses[0].hostelAcceptanceStudents}
+                </Typography>
+              ) : (
+                <div>
+                  <TextField
+                    value={studentStatuses[0].hostelAcceptanceStudents}
+                    required
+                    id="standard-required"
+                  />
+                </div>
+              )}
+            </div>
+
+            {editView && (
+              <Button
+                onClick={saveStudentStatusesHandler}
+                variant="contained"
+                color="primary"
+              >
+                Save
+              </Button>
+            )}
           </div>
           <div>
             <SimpleBarChart data={generateStudentStatusesChartData()} />

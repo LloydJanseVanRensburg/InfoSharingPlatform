@@ -9,6 +9,9 @@ const useStyles = makeStyles({
     margin: '5rem 0',
     textAlign: 'center',
   },
+  mainContainer: {
+    position: 'relative',
+  },
 });
 
 const FacultyById = () => {
@@ -23,7 +26,7 @@ const FacultyById = () => {
   }, [id]);
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" className={classes.mainContainer}>
       <Typography className={classes.title} variant="h2" component="h1">
         {selectedFaculty?.displayName}
       </Typography>
