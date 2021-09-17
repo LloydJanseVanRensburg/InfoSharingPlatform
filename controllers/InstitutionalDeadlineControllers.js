@@ -15,19 +15,18 @@ exports.getAllInstitutionalDeadlines = async (req, res, next) => {
 
 exports.createInstitutionalDeadline = async (req, res, next) => {
   try {
-    const { facultyId, deadlineDate, description } = req.body;
+    const { deadlineDate, description } = req.body;
 
-    if (!facultyId || !deadlineDate || !description) {
+    if (!deadlineDate || !description) {
       return next(
         new AppError(
-          'Please provide {facultyId,deadlineDate,hostelAcceptanceStudents}',
+          'Please provide {deadlineDate,hostelAcceptanceStudents}',
           400
         )
       );
     }
 
     const newInstitutionalDeadline = await InstitutionalDeadline.create({
-      facultyId,
       deadlineDate,
       description,
     });
@@ -78,7 +77,7 @@ exports.updateInstitutionalDeadlineById = async (req, res, next) => {
       return next(`InstitutionalDeadline with id ${id} was not found`, 404);
     }
 
-    const updatedInstitutionalDeadline = await InstitutionalDeadline.update(
+    await InstitutionalDeadline.update(
       {
         facultyId,
         deadlineDate,
@@ -91,6 +90,9 @@ exports.updateInstitutionalDeadlineById = async (req, res, next) => {
       }
     );
 
+    const updatedInstitutionalDeadline = await InstitutionalDeadline.findByPk(
+      id
+    );
     res.status(201).json({ success: true, updatedInstitutionalDeadline });
   } catch (error) {
     next(new AppError('Server Error - Check Logs', 500));

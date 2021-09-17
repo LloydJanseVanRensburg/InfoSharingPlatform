@@ -58,7 +58,13 @@ const RegisterPage = () => {
 
   const { open, severity, message } = snack;
 
-  const { registerUser } = useContext(authContext);
+  const { register, isAuthenticated } = useContext(authContext);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      history.push('/');
+    }
+  }, [isAuthenticated, history]);
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -72,7 +78,7 @@ const RegisterPage = () => {
       });
     }
 
-    registerUser({
+    register({
       username,
       email,
       password,
@@ -125,6 +131,7 @@ const RegisterPage = () => {
           id="outlined-basic"
           label="Password"
           variant="outlined"
+          type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />

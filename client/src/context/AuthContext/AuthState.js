@@ -46,7 +46,35 @@ const AuthState = ({ children }) => {
     }
   };
 
-  const register = async (registerData) => {};
+  const register = async (registerData) => {
+    const axiosConfig = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    try {
+      dispatch({ type: actionTypes.REGISTER_USER_LOADING });
+
+      const res = await axios.post(
+        `${BASE_URL}/users/register`,
+        registerData,
+        axiosConfig
+      );
+
+      dispatch({
+        type: actionTypes.REGISTER_USER_SUCCESS,
+        payload: res.data.user,
+      });
+
+      localStorage.setItem('authToken', res.data.token);
+    } catch (error) {
+      dispatch({
+        type: actionTypes.REGISTER_USER_ERROR,
+        payload: error.response.data.error,
+      });
+    }
+  };
 
   const loadUserData = async () => {
     const axiosConfig = {

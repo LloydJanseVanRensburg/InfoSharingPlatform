@@ -5,7 +5,7 @@ import App from './App';
 import AuthState from './context/AuthContext/AuthState';
 import FacultyState from './context/FacultyContext/FacultyState';
 
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider } from '@material-ui/core';
 
 const theme = createTheme({
   palette: {

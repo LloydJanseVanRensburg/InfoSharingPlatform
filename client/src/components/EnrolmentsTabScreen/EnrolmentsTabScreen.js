@@ -40,7 +40,13 @@ const useStyles = makeStyles({
 
 const EnrolmentsTabScreen = ({ value }) => {
   const classes = useStyles();
-  const { loading, enrolments } = useContext(facultyContext);
+  const {
+    loading,
+    enrolments,
+    updateEnrolments,
+    changeEnrolmentState,
+    selectedFaculty,
+  } = useContext(facultyContext);
 
   const [editView, setEditView] = useState(false);
 
@@ -79,10 +85,35 @@ const EnrolmentsTabScreen = ({ value }) => {
     return data;
   };
 
-  const saveEnrolmentHandler = () => {
-    setTimeout(() => {
-      setEditView(false);
-    }, 1500);
+  const saveEnrolmentHandler = async () => {
+    if (
+      !enrolments[0].firstTimeUnderGrads ||
+      !enrolments[0].masters ||
+      !enrolments[0].doctors ||
+      !enrolments[0].totalUnderGrads ||
+      !enrolments[0].postGradsToMasters ||
+      !enrolments[0].totalPostGrads ||
+      !enrolments[0].occasionalStudents
+    ) {
+      return;
+    }
+
+    await updateEnrolments(enrolments[0].id, {
+      facultyId: selectedFaculty.id,
+      firstTimeUnderGrads: enrolments[0].firstTimeUnderGrads,
+      masters: enrolments[0].masters,
+      doctors: enrolments[0].doctors,
+      totalUnderGrads: enrolments[0].totalUnderGrads,
+      totalPostGrads: enrolments[0].totalPostGrads,
+      occasionalStudents: enrolments[0].occasionalStudents,
+      postGradsToMasters: enrolments[0].postGradsToMasters,
+    });
+
+    setEditView(false);
+  };
+
+  const enrolmentDataChangeHandler = (e) => {
+    changeEnrolmentState(e.target.name, e.target.value);
   };
 
   return (
@@ -93,15 +124,17 @@ const EnrolmentsTabScreen = ({ value }) => {
         </div>
       )}
 
-      <Fab
-        onClick={() => setEditView((prev) => !prev)}
-        disabled={editView || loading}
-        className={classes.fabEditBtn}
-        color="secondary"
-        aria-label="edit"
-      >
-        <EditIcon />
-      </Fab>
+      {enrolments.length > 0 && (
+        <Fab
+          onClick={() => setEditView((prev) => !prev)}
+          disabled={editView || loading}
+          className={classes.fabEditBtn}
+          color="secondary"
+          aria-label="edit"
+        >
+          <EditIcon />
+        </Fab>
+      )}
 
       {!loading && enrolments[0] && (
         <div className={classes.tabContent}>
@@ -120,6 +153,8 @@ const EnrolmentsTabScreen = ({ value }) => {
                     value={enrolments[0].firstTimeUnderGrads}
                     required
                     id="standard-required"
+                    name="firstTimeUnderGrads"
+                    onChange={enrolmentDataChangeHandler}
                   />
                 </div>
               )}
@@ -137,6 +172,8 @@ const EnrolmentsTabScreen = ({ value }) => {
                     value={enrolments[0].totalUnderGrads}
                     required
                     id="standard-required"
+                    onChange={enrolmentDataChangeHandler}
+                    name="totalUnderGrads"
                   />
                 </div>
               )}
@@ -156,6 +193,8 @@ const EnrolmentsTabScreen = ({ value }) => {
                     value={enrolments[0].postGradsToMasters}
                     required
                     id="standard-required"
+                    onChange={enrolmentDataChangeHandler}
+                    name="postGradsToMasters"
                   />
                 </div>
               )}
@@ -173,6 +212,8 @@ const EnrolmentsTabScreen = ({ value }) => {
                     value={enrolments[0].masters}
                     required
                     id="standard-required"
+                    onChange={enrolmentDataChangeHandler}
+                    name="masters"
                   />
                 </div>
               )}
@@ -190,6 +231,8 @@ const EnrolmentsTabScreen = ({ value }) => {
                     value={enrolments[0].doctors}
                     required
                     id="standard-required"
+                    onChange={enrolmentDataChangeHandler}
+                    name="doctors"
                   />
                 </div>
               )}
@@ -207,6 +250,8 @@ const EnrolmentsTabScreen = ({ value }) => {
                     value={enrolments[0].totalPostGrads}
                     required
                     id="standard-required"
+                    onChange={enrolmentDataChangeHandler}
+                    name="totalPostGrads"
                   />
                 </div>
               )}
@@ -224,6 +269,8 @@ const EnrolmentsTabScreen = ({ value }) => {
                     value={enrolments[0].occasionalStudents}
                     required
                     id="standard-required"
+                    onChange={enrolmentDataChangeHandler}
+                    name="occasionalStudents"
                   />
                 </div>
               )}

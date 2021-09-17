@@ -41,7 +41,15 @@ const useStyles = makeStyles({
 
 const StudentStatusesTabScreen = ({ value }) => {
   const classes = useStyles();
-  const { loading, studentStatuses } = useContext(facultyContext);
+
+  const {
+    loading,
+    studentStatuses,
+    updateStudentStatuses,
+    changeStudentStatuses,
+    selectedFaculty,
+  } = useContext(facultyContext);
+
   const [editView, setEditView] = useState(false);
 
   const generateStudentStatusesChartData = () => {
@@ -67,10 +75,29 @@ const StudentStatusesTabScreen = ({ value }) => {
     return data;
   };
 
-  const saveStudentStatusesHandler = () => {
-    setTimeout(() => {
-      setEditView(false);
-    }, 1500);
+  const saveStudentStatusesHandler = async () => {
+    if (
+      !studentStatuses[0].acceptedStudents ||
+      !studentStatuses[0].bursaryStudents ||
+      !studentStatuses[0].highAPSStudents ||
+      !studentStatuses[0].hostelAcceptanceStudents
+    ) {
+      return;
+    }
+
+    await updateStudentStatuses(studentStatuses[0].id, {
+      facultyId: selectedFaculty.id,
+      acceptedStudents: studentStatuses[0].acceptedStudents,
+      bursaryStudents: studentStatuses[0].bursaryStudents,
+      highAPSStudents: studentStatuses[0].highAPSStudents,
+      hostelAcceptanceStudents: studentStatuses[0].hostelAcceptanceStudents,
+    });
+
+    setEditView(false);
+  };
+
+  const studentStatusesDataChangeHandler = (e) => {
+    changeStudentStatuses(e.target.name, e.target.value);
   };
 
   return (
@@ -81,15 +108,17 @@ const StudentStatusesTabScreen = ({ value }) => {
         </div>
       )}
 
-      <Fab
-        onClick={() => setEditView((prev) => !prev)}
-        disabled={editView || loading}
-        className={classes.fabEditBtn}
-        color="secondary"
-        aria-label="edit"
-      >
-        <EditIcon />
-      </Fab>
+      {studentStatuses.length > 0 && (
+        <Fab
+          onClick={() => setEditView((prev) => !prev)}
+          disabled={editView || loading}
+          className={classes.fabEditBtn}
+          color="secondary"
+          aria-label="edit"
+        >
+          <EditIcon />
+        </Fab>
+      )}
 
       {!loading && studentStatuses[0] && (
         <div className={classes.tabContent}>
@@ -106,6 +135,8 @@ const StudentStatusesTabScreen = ({ value }) => {
                     value={studentStatuses[0].acceptedStudents}
                     required
                     id="standard-required"
+                    onChange={studentStatusesDataChangeHandler}
+                    name="acceptedStudents"
                   />
                 </div>
               )}
@@ -122,6 +153,8 @@ const StudentStatusesTabScreen = ({ value }) => {
                     value={studentStatuses[0].bursaryStudents}
                     required
                     id="standard-required"
+                    onChange={studentStatusesDataChangeHandler}
+                    name="bursaryStudents"
                   />
                 </div>
               )}
@@ -138,6 +171,8 @@ const StudentStatusesTabScreen = ({ value }) => {
                     value={studentStatuses[0].highAPSStudents}
                     required
                     id="standard-required"
+                    onChange={studentStatusesDataChangeHandler}
+                    name="highAPSStudents"
                   />
                 </div>
               )}
@@ -156,6 +191,8 @@ const StudentStatusesTabScreen = ({ value }) => {
                     value={studentStatuses[0].hostelAcceptanceStudents}
                     required
                     id="standard-required"
+                    onChange={studentStatusesDataChangeHandler}
+                    name="hostelAcceptanceStudents"
                   />
                 </div>
               )}

@@ -78,7 +78,7 @@ exports.updateInternalDeadlineById = async (req, res, next) => {
       return next(`InternalDeadline with id ${id} was not found`, 404);
     }
 
-    const updatedInternalDeadline = await InternalDeadline.update(
+    await InternalDeadline.update(
       {
         facultyId,
         deadlineDate,
@@ -91,6 +91,7 @@ exports.updateInternalDeadlineById = async (req, res, next) => {
       }
     );
 
+    const updatedInternalDeadline = await InternalDeadline.findByPk(id);
     res.status(201).json({ success: true, updatedInternalDeadline });
   } catch (error) {
     next(new AppError('Server Error - Check Logs', 500));

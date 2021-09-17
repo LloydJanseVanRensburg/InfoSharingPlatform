@@ -52,6 +52,7 @@ exports.loginUser = async (req, res, next) => {
   if (!email || !password) {
     return next(new AppError('Please provide email and password', 401));
   }
+
   try {
     let user = await User.findOne({ email });
 
@@ -73,7 +74,10 @@ exports.loginUser = async (req, res, next) => {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
 
-    user = await User.findOne({ email, attributes: { exclude: ['password'] } });
+    user = await User.findOne({
+      where: { email },
+      attributes: { exclude: ['password'] },
+    });
 
     res.status(200).json({ token, user });
   } catch (error) {
@@ -85,13 +89,21 @@ exports.loginUser = async (req, res, next) => {
 exports.registerUser = async (req, res, next) => {
   const { username, email, password } = req.body;
 
+  console.log({ username, email, password });
+
   if (!username || !email || !password) {
     return next(
       new AppError('Please provide username, email, and password', 401)
     );
   }
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({
+    where: {
+      email: email,
+    },
+  });
+
+  console.log({ user });
 
   if (user) {
     return next(new AppError('User already exists', 401));
